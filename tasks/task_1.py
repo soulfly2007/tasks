@@ -42,8 +42,7 @@ def exponentiation(divident: float, divider: float, power: float) -> float:
 
 # Определить знак 32-битного числа с помощью операции &.
 def sign(value: int) -> int:
-    mask = 0b1 << 31
-    return value & mask
+    return value & 0x80000000
 
 
 # Умножить целочисленное значение на -1 с помощью битовых операций и сложения.
@@ -53,13 +52,10 @@ def change_sign(value: int) -> int:
 
 # Возвратить True, если хотя бы один четный бит 32-х битного числа установлен в 1.
 def check_32_even_bit_set(value: int) -> bool:
-    mask = 0b01010101010101010101010101010101
-    return (value & mask) != 0
+    return (value & 0x55555555) != 0
 
 
-# Посчитать количество бит в 32-х битном числе, установленных в ноль.
-def calculate_32_zero_bits(value: int) -> int:
-    return bin(value)[2:].count('0')
+
 
 # Посчитать количество бит в 32-х битном числе, установленных в ноль.
 def calculate_32_zero_bits(value: int) -> int:
@@ -85,12 +81,12 @@ def unpack_4_4(value: int) -> Tuple[int, int]:
 
 # Ограничить число заданным интервалом. Нижняя граница заданного интервала меньше либо равна верхней.
 def clamp(value: float, low: float, high: float) -> float:
-    return low if value < low and low <= high else (high if value > high else value)
+    return low if value < low else (high if value > high else value)
 
 
 # Ограничить число заданным интервалом. Нижняя граница может быть как меньше, так и больше верхней.
 def clamp_any(value: float, low: float, high: float) -> float:
-    return low if value < low and low < high else (high if value > high and low > high else value)
+    return clamp(value, low, high) if low < high else clamp(value, high, low)
 
 
 # Вернуть True, если число нечетно и входит в интервал от -10 до 10.
