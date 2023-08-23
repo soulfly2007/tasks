@@ -5,6 +5,7 @@
 '''
 
 from typing import Any, Dict, Iterable, List, Tuple
+import copy
 
 
 # Сконструировать и вернуть список из переданных аргументов.
@@ -48,8 +49,11 @@ def build_list_from_value_and_length(value: Any, length: int) -> List:
 
 # Удалить из списка заданный элемент.
 def remove_value_from_list(values: List, value_to_remove: Any) -> List:
-    values.remove(value_to_remove)
-    return values
+    new_list = []
+    for i in values:
+        if i != value_to_remove:
+            new_list.append(i)
+    return new_list
 
 
 # Удалить из списка заданный элемент, используя comprehension expression [... for .. in ...].
@@ -103,7 +107,7 @@ def build_dict_from_keys(values: Iterable) -> Dict:
 # Создать и вернуть словарь, используя в качестве ключей аргумент функции,
 # а в качестве значений - значение по-умолчанию.
 def build_dict_from_keys_and_default(values: Iterable, default: Any) -> Dict:
-    return dict.fromkeys(values, default)
+    return dict.fromkeys(values, copy.copy(default))
 
 
 # Создать и вернуть словарь, ключами которого являются индексы элементов,
@@ -126,23 +130,24 @@ def build_dict_from_two_lists(keys: List, values: List) -> Dict:
 # Сформировать из двух словарей и вернуть его. В случае, если ключи совпадают,
 # использовать значение из второго словаря (dict.update).
 def build_dict_using_update(first: Dict, second: Dict) -> Dict:
-    first.update(second)
-    return first
+    new_dict = copy.copy(first)
+    new_dict.update(second)
+    return new_dict
 
 
 # Обновить словарь (и вернуть его), используя значения именованных аргументов.
 # Заменить значение в случае совпадения ключей.
 def update_dict_using_kwargs(dictionary: Dict, **kwargs) -> Dict:
-    dictionary.update(kwargs)
-    return dictionary
+    return build_dict_using_update(dictionary, kwargs)
 
 
 # Обновить словарь (и вернуть его), используя значения именованных аргументов.
 # Объединить значения в список в случае совпадения ключей.
 def update_and_merge_dict_using_kwargs(dictionary: Dict, **kwargs) -> Dict:
+    new_dict = copy.copy(dictionary)
     for key, value in kwargs.items():
-        dictionary[key] = [dictionary[key], value] if key in dictionary else value
-    return dictionary
+        new_dict[key] = [new_dict[key], value] if key in new_dict else value
+    return new_dict
 
 
 # Объединить два словарь и вернуть результат.
