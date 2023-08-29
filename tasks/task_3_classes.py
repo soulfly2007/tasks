@@ -25,48 +25,119 @@
 
 
 class LengthUnits:
-    ...
+    UNIT = 'm'
+    FACTOR = 1
+
+    def __init__(self, value):
+        self.value = value * self.FACTOR if type(value) in (float, int) else value.value
+
+    def __str__(self):
+        return f'{self.value / self.FACTOR} {self.UNIT}'
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __add__(self, other):
+        if not isinstance(other, (float, int, LengthUnits)):
+            raise TypeError('Unsupported operand type.')
+        return type(self)(self.value / self.FACTOR + other) if type(other) in (float, int) else type(self)(
+            (self.value + other.value) / self.FACTOR)
+
+    def __iadd__(self, other):
+        if not isinstance(other, (float, int, LengthUnits)):
+            raise TypeError('Unsupported operand type.')
+        self.value += other * self.FACTOR if type(other) in (float, int) else other.value
+        return self
+
+    def __sub__(self, other):
+        if not isinstance(other, (float, int, LengthUnits)):
+            raise TypeError('Unsupported operand type.')
+        return type(self)(self.value / self.FACTOR - other) if type(other) in (float, int) else type(self)(
+            (self.value - other.value) / self.FACTOR)
+
+    def __isub__(self, other):
+        if not isinstance(other, (float, int, LengthUnits)):
+            raise TypeError('Unsupported operand type.')
+        self.value -= other * self.FACTOR if type(other) in (float, int) else other.value
+        return self
+
+    def __mul__(self, other):
+        if type(other) not in (float, int):
+            raise TypeError('Unsupported operand type.')
+        return type(self)(self.value / self.FACTOR * other)
+
+    def __imul__(self, other):
+        if type(other) not in (float, int):
+            raise TypeError('Unsupported operand type.')
+        self.value *= other
+        return self
+
+    def __truediv__(self, other):
+        if not isinstance(other, (float, int, LengthUnits)):
+            raise TypeError('Unsupported operand type.')
+        return type(self)(self.value / self.FACTOR / other) if type(other) in (
+            float, int) else self.value / other.value
+
+    def __itruediv__(self, other):
+        if type(other) not in (float, int):
+            raise TypeError('Unsupported operand type.')
+        self.value /= other
+        return self
 
 
-class Millimeters:
-    ...
+class Millimeters(LengthUnits):
+    UNIT = 'mm'
+    FACTOR = 0.001
 
 
-class Centimeters:
-    ...
+class Centimeters(LengthUnits):
+    UNIT = 'cm'
+    FACTOR = 0.01
 
 
-class Meters:
-    ...
+class Meters(LengthUnits):
+    UNIT = 'm'
+    FACTOR = 1
 
 
-class Kilometers:
-    ...
+class Kilometers(LengthUnits):
+    UNIT = 'km'
+    FACTOR = 1000
 
 
-class Inches:
-    ...
+class Inches(LengthUnits):
+    UNIT = 'in'
+    FACTOR = 0.0254
 
 
-class Feets:
-    ...
+class Feets(LengthUnits):
+    UNIT = 'ft'
+    FACTOR = 0.3048
 
 
-class Yards:
-    ...
+class Yards(LengthUnits):
+    UNIT = 'yd'
+    FACTOR = 0.9144
 
 
-class Miles:
-    ...
+class Miles(LengthUnits):
+    UNIT = 'mi'
+    FACTOR = 1609.34
 
 
-class Fen:
-    ...
+class Fen(LengthUnits):
+    UNIT = 'fen'
+    FACTOR = 1 / 300
 
 
-class Chi:
-    ...
+class Chi(LengthUnits):
+    UNIT = 'chi'
+    FACTOR = 1 / 3
 
 
-class In:
-    ...
+class In(LengthUnits):
+    UNIT = 'in'
+    FACTOR = 100 / 3
